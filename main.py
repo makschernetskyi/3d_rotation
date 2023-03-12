@@ -4,14 +4,6 @@ from tkinter import *
 
 
 
-
-
-
-
-
-
-
-
 def main():
 	root = Tk()
 	root.title("rotation_in_3d")
@@ -85,7 +77,7 @@ def draw_cube(points, tag, horizon_point, WIDTH, canvas):
 	perspectived_points = perspective_points(points, WIDTH, horizon_point)
 
 
-	converted_points = [0]*len(points)
+	converted_points = [Point(0,0,0) for i in range(len(points))]
 
 	for i in range(len(points)):
 		converted_points[i] = convert_to_canvas_coords(perspectived_points[i], WIDTH, WIDTH)
@@ -117,9 +109,14 @@ def convert_to_canvas_coords(point, width, height):
 
 
 def perspective_points(points, WIDTH, horizont_point):
-	perspectived_points = []
-	for p in points:
-		perspectived_points.append(perspective_point(p, WIDTH, horizont_point))
+	perspectived_points = [Point(0,0,0) for i in range(len(points))]
+	for p, perspectived_p in zip(points,perspectived_points):
+		perspectived_point = perspective_point(p, WIDTH, horizont_point)
+
+		perspectived_p.x = perspectived_point.x
+		perspectived_p.y = perspectived_point.y
+		perspectived_p.z = perspectived_point.z
+
 	return perspectived_points
 
 def perspective_point(point, WIDTH, horizon_point):
@@ -182,7 +179,7 @@ class Point:
 		return Point(self.x, rotated_y, rotated_z)
 
 	def apply_rotation(self, phi, axis='z'):
-		rotated_point = Point(0,0,0)
+		rotated_point = None
 		if axis=='x':
 			rotated_point = self.rotated_x(phi)
 		elif axis=='y':
